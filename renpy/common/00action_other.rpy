@@ -648,6 +648,41 @@ init -1500 python:
             else:
                 adjustment.change(adjustment.value + delta * self.amount)
 
+            renpy.restart_interaction()
+
+        def get_sensitive(self):
+
+            d = renpy.get_widget(None, self.id)
+
+            if d is None:
+                raise Exception("There is no displayable with the id {}.".format(self.id))
+
+            if self.direction == "increase":
+                delta = +1
+                adjustment = d.adjustment
+            elif self.direction == "decrease":
+                delta = -1
+                adjustment = d.adjustment
+            elif self.direction == "horizontal increase":
+                delta = +1
+                adjustment = d.xadjustment
+            elif self.direction == "horizontal decrease":
+                delta = -1
+                adjustment = d.xadjustment
+            elif self.direction == "vertical increase":
+                delta = +1
+                adjustment = d.yadjustment
+            elif self.direction == "vertical decrease":
+                delta = -1
+                adjustment = d.yadjustment
+            else:
+                raise Exception("Unknown scroll direction: {}".format(self.direction))
+
+            if delta == 1:
+                return adjustment.value < adjustment.range
+            else:
+                return adjustment.value > 0
+
 
 init -1500:
 
